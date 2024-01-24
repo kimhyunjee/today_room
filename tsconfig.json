@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext", //commonjs는 require 문법/  esnext는 import 문법을 사용
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "allowJs": true, // js파일 컴파일 허용 여부
+    "useDefineForClassFields": true, // 데코레이터 지원 활성화(?)
+
+    /* 모듈 해석 옵션 */
+    "moduleDetection": "force", // 모든 TS파일을 전역x 로컬파일로 취급
+    "moduleResolution": "bundler", //모듈 해석 방법 설정 - 다른 툴로 번들될 것 설명
+    "allowImportingTsExtensions": true, // ts확장자 사용
+    "allowSyntheticDefaultImports": true, // default export이 아닌 모듈에서도 default import가 가능하게 할 지 여부, 해당 설정은 코드 추출에 영향은 주지 않고, 타입확인에만 영향
+    "resolveJsonModule": true, //// TS에서 json파일 불러오기
+    "isolatedModules": true, //각 파일을 분리된 모듈로 트랜스파일
+    "noEmit": true, //결과 파일 내보낼지 여부 / true:결과파일 만들지 말 것
+    // 원래 ts는 ts컴파일러 동작 후 ts-> js로 변환
+    // 변환한 결과(js)가 리액트 사용 시에 필요x (vite로 번들링될거라서- build시배포 파일로 나와야해서- js한 개의파일로 나옴) -> ts 컴파일러가 뱉는 결과물 필요x
+    "jsx": "react-jsx", // jsx코드 생성 설정
+
+    /* 소스코드 분석 */
+    "strict": true,
+    //"noUnusedLocals": true, //쓰지않는 지역변수 있으면 에러
+    //"noUnusedParameters": true, //쓰지않는 파라미터 있으면 에러
+    "noFallthroughCasesInSwitch": true, //switch문에서 fallthrough 케이스에 대한 에러
+
+    /* 추가 옵션 */
+    "skipLibCheck": true, // 라이브러리 파일들은 체크 x / true: 꺼짐
+    "forceConsistentCasingInFileNames": true, //같은 파일에 대한 일관되지 않은 참조를 허용하지 않을 지 여부
+
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"],
+
+  "references": [{ "path": "./tsconfig.node.json" }] // tsc.node.json이랑 연결
+}
