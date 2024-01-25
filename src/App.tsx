@@ -1,11 +1,18 @@
-import "./App.css";
+import { useEffect } from "react";
+import { Route, Routes } from "react-router-dom";
+import { auth } from "./firebase";
+
 import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 import Main from "./components/main/Main";
-import LogInPage from "./pages/logIn/logInPage";
-import { Route, Routes } from "react-router-dom";
+import LogInPage from "./pages/logIn/LogInPage";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
-function App() {
+const App = () => {
+  useEffect(() => {
+    createUserWithEmailAndPassword(auth, "test1@gmail.com", "12341234%");
+  }, []);
+
   return (
     <>
       <Routes>
@@ -14,6 +21,6 @@ function App() {
       </Routes>
     </>
   );
-}
+};
 
 export default App;

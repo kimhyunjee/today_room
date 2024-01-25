@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import LogIn from "@/components/logIn/logIn";
+import LogIn from "@/components/logIn/LogIn";
 
 const LogInPage = () => {
   return (
