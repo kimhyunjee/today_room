@@ -1,6 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { auth } from "@/firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 import {
   Form,
@@ -22,9 +24,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "../ui/use-toast";
 import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
 
 const FormSchema = z.object({
-  sortation: z.string(),
+  //isSeller: z.string(),
   username: z.string().min(2, { message: "이름을 입력해주세요" }),
   email: z
     .string()
@@ -47,23 +50,26 @@ const LogInForm = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      sortation: "",
+      //isSeller: "",
       username: "",
       email: "",
       password: "",
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  }
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    try {
+      console.log(data);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+      console.log(userCredential);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -73,10 +79,10 @@ const LogInForm = () => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-2/3 space-y-6"
         >
-          {to === "/logIn" ? null : (
+          {/* {to === "/logIn" ? null : (
             <FormField
               control={form.control}
-              name="sortation"
+              name="isSeller"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>판매자/구매자 구분</FormLabel>
@@ -98,7 +104,7 @@ const LogInForm = () => {
                 </FormItem>
               )}
             ></FormField>
-          )}
+          )} */}
           <FormField
             control={form.control}
             name="username"
@@ -145,19 +151,11 @@ const LogInForm = () => {
             )}
           ></FormField>
           {to === "/logIn" ? (
-            <Button type="submit">
-              <Link to="/">로그인</Link>
-            </Button>
+            <Button type="submit">로그인</Button>
           ) : (
-            <Button type="submit">
-              <Link to="/">가입 완료</Link>
-            </Button>
+            <Button type="submit">가입 완료</Button>
           )}
-          {to === "/logIn" ? (
-            <Button asChild>
-              <Link to="/signUp">회원가입</Link>
-            </Button>
-          ) : null}
+          {to === "/logIn" ? <Button asChild>회원가입</Button> : null}
         </form>
       </Form>
     </>
