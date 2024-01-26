@@ -7,11 +7,13 @@ import Footer from "./components/footer/Footer";
 import Main from "./components/main/Main";
 import LogInPage from "./pages/logIn/LogInPage";
 import SignUpPage from "./pages/logIn/SignUpPage";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 
 const App = () => {
   useEffect(() => {
-    createUserWithEmailAndPassword(auth, "test1@gmail.com", "12341234%");
+    // onAuthStateChanged(auth,(user)=> {
+    //   console.log(user)
+    // }) // 사용자 인증정보 변경시마다 이벤트 받아오기
   }, []);
 
   return (
