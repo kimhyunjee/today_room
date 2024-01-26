@@ -6,6 +6,7 @@ import Header from "./components/header/Header";
 import Footer from "./components/footer/Footer";
 import Main from "./components/main/Main";
 import LogInPage from "./pages/logIn/LogInPage";
+import SignUpPage from "./pages/logIn/SignUpPage";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const App = () => {
@@ -18,6 +19,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/logIn" element={<LogInPage />} />
+        <Route path="/signUp" element={<SignUpPage />} />
       </Routes>
     </>
   );
