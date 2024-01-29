@@ -2,7 +2,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { auth } from "@/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 
 import {
   Form,
@@ -105,20 +108,22 @@ const LogInForm = () => {
               )}
             ></FormField>
           )} */}
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>이름</FormLabel>
-                <FormControl>
-                  <Input placeholder="이름을 적어주세요" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          ></FormField>
 
+          {to === "/logIn" ? null : (
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>이름</FormLabel>
+                  <FormControl>
+                    <Input placeholder="이름을 적어주세요" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            ></FormField>
+          )}
           <FormField
             control={form.control}
             name="email"
@@ -155,7 +160,11 @@ const LogInForm = () => {
           ) : (
             <Button type="submit">가입 완료</Button>
           )}
-          {to === "/logIn" ? <Button asChild>회원가입</Button> : null}
+          {to === "/logIn" ? (
+            <Button asChild>
+              <Link to="/signUp">회원가입</Link>
+            </Button>
+          ) : null}
         </form>
       </Form>
     </>
