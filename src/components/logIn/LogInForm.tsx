@@ -69,6 +69,8 @@ const LogInForm = () => {
         data.password
       );
       console.log(userCredential);
+      console.log(userCredential.user.email,userCredential.user.uid)
+
     } catch (error) {
       console.log(error);
     }

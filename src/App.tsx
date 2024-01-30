@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { auth } from "./firebase";
 
@@ -7,19 +7,29 @@ import Footer from "./components/footer/Footer";
 import Main from "./components/main/Main";
 import LogInPage from "./pages/logIn/LogInPage";
 import SignUpPage from "./pages/logIn/SignUpPage";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, getAuth, User } from "firebase/auth";
 
 const App = () => {
+  const [userState, setUserState] = useState<boolean>(false);
+
   useEffect(() => {
-    // onAuthStateChanged(auth,(user)=> {
-    //   console.log(user)
-    // }) // 사용자 인증정보 변경시마다 이벤트 받아오기
+    const auth = getAuth();
+    console.log(auth);
+
+    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
+      const isAuthenticated = user !== null;
+      setUserState(isAuthenticated);
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   return (
     <>
       <Routes>
-        <Route path="/" element={<Main />} />
+        <Route path="/" element={userState ? <Main /> : <LogInPage />} />
         <Route path="/logIn" element={<LogInPage />} />
         <Route path="/signUp" element={<SignUpPage />} />
       </Routes>
