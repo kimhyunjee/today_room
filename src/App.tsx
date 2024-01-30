@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { auth } from "./firebase";
 
-import Header from "./components/header/Header";
-import Footer from "./components/footer/Footer";
+import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
 import Main from "./components/main/Main";
 import LogInPage from "./pages/logIn/LogInPage";
 import SignUpPage from "./pages/logIn/SignUpPage";
