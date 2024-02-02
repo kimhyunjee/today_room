@@ -7,6 +7,7 @@ import Footer from "./components/layout/Footer";
 import Main from "./components/main/Main";
 import LogInPage from "./pages/logIn/LogInPage";
 import SignUpPage from "./pages/logIn/SignUpPage";
+import AddProductPage from "./pages/seller/AddProductPage";
 import { onAuthStateChanged, getAuth, User } from "firebase/auth";
 
 const App = () => {
@@ -32,6 +33,7 @@ const App = () => {
         <Route path="/" element={userState ? <Main /> : <LogInPage />} />
         <Route path="/logIn" element={<LogInPage />} />
         <Route path="/signUp" element={<SignUpPage />} />
+        <Route path="/addProduct" element={<AddProductPage />} />
       </Routes>
     </>
   );
