@@ -15,7 +15,7 @@ const App = () => {
 
   useEffect(() => {
     const auth = getAuth();
-    console.log(auth);
+    // console.log(auth);
 
     const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
       const isAuthenticated = user !== null;
