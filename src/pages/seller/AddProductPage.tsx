@@ -11,15 +11,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
 
 const FormSchema = z.object({
   img: z.string().min(1),
-  // title: z.string().min(1, { message: "상품명을 입력해주세요" }),
-  // description: z.string().min(1, { message: "상품 설명을 입력해주세요" }),
-  // price: z
-  //   .string()
-  //   .min(1, { message: "상품 가격을 입력해주세요" })
-  //   .or(z.number()),
+  title: z.string().min(1, { message: "상품명을 입력해주세요" }),
+  description: z.string().min(1, { message: "상품 설명을 입력해주세요" }),
+  price: z
+    .string()
+    .min(1, { message: "상품 가격을 입력해주세요" })
+    .or(z.number()),
 });
 
 const AddProductPage = () => {
@@ -27,9 +28,9 @@ const AddProductPage = () => {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       img: "",
-      // title: "",
-      // description: "",
-      // price: "",
+      title: "",
+      description: "",
+      price: "",
     },
   });
 
@@ -46,14 +47,59 @@ const AddProductPage = () => {
             name="img"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>상품 이미지</FormLabel>
+                <FormLabel htmlFor="picture">
+                  상품 이미지를 등록하세요
+                </FormLabel>
                 <FormControl>
-                  <Label htmlFor="picture">상품 이미지를 등록하세요</Label>
                   <Input id="picture" type="file" multiple {...field} />
                 </FormControl>
               </FormItem>
             )}
           ></FormField>
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel htmlFor="productName">
+                  상품명을 입력해주세요
+                </FormLabel>
+                <FormControl>
+                  <Input id="productName" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          ></FormField>
+
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel htmlFor="description">
+                  상품 설명을 입력해주세요
+                </FormLabel>
+                <FormControl>
+                  <Input id="description" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          ></FormField>
+
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel htmlFor="price">상품 가격을 입력해주세요</FormLabel>
+                <FormControl>
+                  <Input id="price" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          ></FormField>
+
+          <Button type="submit">상품 등록</Button>
         </form>
       </Form>
     </>
