@@ -5,6 +5,8 @@ import { auth } from "@/firebase";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 
 import {
@@ -26,8 +28,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "../ui/use-toast";
-import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const FormSchema = z.object({
   //isSeller: z.string(),
@@ -47,8 +49,21 @@ const FormSchema = z.object({
 });
 
 const LogInForm = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const to = location.pathname;
+  const [isLogIn, setIsLogIn] = useState<boolean>(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setIsLogIn(true);
+      } else {
+        setIsLogIn(false);
+      }
+    });
+    return unsubscribe;
+  }, []);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -60,20 +75,45 @@ const LogInForm = () => {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+  const onSubmitSignUp = async (data: z.infer<typeof FormSchema>) => {
+    console.log(data);
     try {
-      console.log(data);
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         data.email,
         data.password
       );
       console.log(userCredential);
-      console.log(userCredential.user.email,userCredential.user.uid)
-
+      localStorage.setItem("user", JSON.stringify(userCredential));
     } catch (error) {
       console.log(error);
     }
+    console.log("현재 로그인한 유저 정보", auth.currentUser);
+    navigate("/");
+  };
+
+  const onSubmitLogIn = async (data: z.infer<typeof FormSchema>) => {
+    console.log(data);
+    try {
+      const userLogIn = await signInWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+      console.log(userLogIn);
+      localStorage.setItem("user", JSON.stringify(userLogIn));
+    } catch (error) {
+      console.log(error);
+    }
+    console.log("현재 로그인한 유저 정보", auth.currentUser);
+    navigate("/");
+  };
+
+  const logOut = async () => {
+    await signOut(auth);
+    console.log("현재 로그인한 유저 정보", auth.currentUser);
+    localStorage.removeItem("user");
+    navigate("/");
   };
 
   return (
@@ -81,7 +121,11 @@ const LogInForm = () => {
       <p className="text-2xl text-lime-400"> Today Room </p>
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={
+            to === "/logIn"
+              ? form.handleSubmit(onSubmitLogIn)
+              : form.handleSubmit(onSubmitSignUp)
+          }
           className="w-2/3 space-y-6"
         >
           {/* {to === "/logIn" ? null : (
@@ -167,6 +211,7 @@ const LogInForm = () => {
               <Link to="/signUp">회원가입</Link>
             </Button>
           ) : null}
+          {/* <Button onClick={logOut}>로그아웃</Button> */}
         </form>
       </Form>
     </>
