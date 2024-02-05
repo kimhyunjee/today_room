@@ -4,7 +4,7 @@ import { auth } from "./firebase";
 
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
-import Main from "./components/main/Main";
+import ProductList from "./pages/seller/ProductListPage";
 import LogInPage from "./pages/logIn/LogInPage";
 import SignUpPage from "./pages/logIn/SignUpPage";
 import AddProductPage from "./pages/seller/AddProductPage";
@@ -30,7 +30,7 @@ const App = () => {
   return (
     <>
       <Routes>
-        <Route path="/" element={userState ? <Main /> : <LogInPage />} />
+        <Route path="/" element={userState ? <ProductList /> : <LogInPage />} />
         <Route path="/logIn" element={<LogInPage />} />
         <Route path="/signUp" element={<SignUpPage />} />
         <Route path="/addProduct" element={<AddProductPage />} />
