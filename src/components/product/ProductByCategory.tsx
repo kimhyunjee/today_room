@@ -1,10 +1,11 @@
 import { Button } from "../ui/button";
 import ProductLayout from "./ProductLayout";
 
+
 const ProductByCategory = () => {
   return (
     <>
-      <h2>Products </h2>
+      <h2> </h2>
       <div>
         <div>
           <Button>Table </Button>
