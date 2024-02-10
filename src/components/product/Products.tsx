@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import { collection, getDocs, query } from "firebase/firestore";
 import { db } from "../../firebase";
 
-import { Button } from "@/components/ui/button";
-
 interface ProductType {
   id: string;
   img: string[];
@@ -38,7 +36,6 @@ const Products = () => {
 
     fetchData();
   }, []);
-  console.log(product);
 
   return;
   {
