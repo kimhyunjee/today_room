@@ -29,10 +29,12 @@ import {
   uploadBytes,
   uploadBytesResumable,
 } from "firebase/storage";
-import { storage } from "@/firebase";
+import { storage, db } from "@/firebase";
+import { collection, addDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 const FormSchema = z.object({
-  img: z.string().min(1).optional(),
+  // img: z.string().min(1).optional(),
   title: z.string().min(1, { message: "상품명을 입력해주세요" }).optional(),
   description: z
     .string()
@@ -56,6 +58,8 @@ const AddProductPage = () => {
   const [previewImageFiles, setPreviewImageFiles] = useState<string[]>([]);
   const [uploadImageFiles, setUploadImageFiles] = useState<FileList>();
 
+  const navigate = useNavigate();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -65,9 +69,6 @@ const AddProductPage = () => {
       price: "",
     },
   });
-
-  // console.log(uploadImageFiles);
-  // console.log(previewImageFiles);
 
   const onChangeImg = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -94,14 +95,27 @@ const AddProductPage = () => {
   };
   console.log(uploadImageFiles); //FileList {name: "",...}
 
-  const onSubmit = async () => {
-    // console.log(data); data: z.infer<typeof FormSchema>
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    console.log(data.title);
     const promises = Array.from(uploadImageFiles as FileList).map((file) =>
       uploadFile(file)
     );
     const files = await Promise.all(promises);
     console.log(files);
     //'https://firebasestorage.googleapis.com/v0/b/today-…=media&token=7acc6b6d-c921-4256-8010-6140c6a8831f'
+
+    try {
+      const docRef = await addDoc(collection(db, "product"), {
+        title: data.title,
+        description: data.description,
+        img: files,
+        price: data.price,
+      });
+      console.log("Document written with ID: ", docRef.id);
+      navigate("/ProductMainPage");
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
 
   const fileRef = useRef<HTMLInputElement>(null);
@@ -125,7 +139,6 @@ const AddProductPage = () => {
         <CarouselPrevious />
         <CarouselNext />
       </Carousel>
-      <button onClick={onSubmit}>asdf</button>
 
       <Input
         id="picture"
