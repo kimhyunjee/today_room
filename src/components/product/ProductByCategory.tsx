@@ -1,8 +1,10 @@
 import { Button } from "../ui/button";
 import ProductLayout from "./ProductLayout";
+import useFetchProduct from "@/hooks/useFetchProduct";
 
 
 const ProductByCategory = () => {
+  const { dataList } = useFetchProduct()
   return (
     <>
       <h2> </h2>
@@ -19,7 +21,7 @@ const ProductByCategory = () => {
         </div>
       </div>
       <div>
-        <ProductLayout />
+        <ProductLayout dataList={dataList}/>
       </div>
     </>
   );
