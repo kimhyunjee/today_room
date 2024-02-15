@@ -14,28 +14,32 @@ interface ProductType {
 const Products = () => {
   const [product, setProduct] = useState<ProductType[]>([]);
 
-  useEffect(() => {
     const fetchData = async () => {
       try {
-        const q = query(collection(db, "product"));
-        const querySnapshot = await getDocs(q);
-
-        const initialProduct: ProductType[] = [];
-
+        const querySnapshot = await getDocs(collection(db, "users"));
         querySnapshot.forEach((doc) => {
-          // console.log(doc, "id", doc.id, "data", doc.data());
-          initialProduct.push({ id: doc.id, ...doc.data() } as ProductType);
-          <div>{doc.id}</div>;
+          console.log(`${doc.id} => ${doc.data()}`);
         });
 
-        setProduct(initialProduct);
+        // const q = query(collection(db, "product"));
+        // const querySnapshot = await getDocs(q);
+
+        // const initialProduct: ProductType[] = [];
+
+        // querySnapshot.forEach((doc) => {
+        //   // console.log(doc, "id", doc.id, "data", doc.data());
+        //   initialProduct.push({ id: doc.id, ...doc.data() } as ProductType);
+        //   <div>{doc.id}</div>;
+        // });
+
+        // setProduct(initialProduct);
       } catch (error) {
         console.log("error", error);
       }
     };
 
     fetchData();
-  }, []);
+
 
   return;
   {
