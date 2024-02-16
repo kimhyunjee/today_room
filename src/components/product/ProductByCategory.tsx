@@ -1,27 +1,38 @@
 import { Button } from "../ui/button";
 import ProductLayout from "./ProductLayout";
 import useFetchProduct from "@/hooks/useFetchProduct";
+import { Link } from "react-router-dom";
 
+const categories = [
+  { label: "Bed", value: "bed" },
+  { label: "Table", value: "table" },
+  { label: "Sofa", value: "sofa" },
+  { label: "Chair", value: "chair" },
+  { label: "Closet", value: "closet" },
+];
 
 const ProductByCategory = () => {
-  const { dataList } = useFetchProduct()
+  const { dataList } = useFetchProduct();
   return (
     <>
-      <h2> </h2>
-      <div>
-        <div>
-          <Button>Table </Button>
-          <Button>Sofa </Button>
-          <Button>Bed </Button>
-          <Button>Chair </Button>
-          <Button>Closet </Button>
+      <div className="m-8">
+        <h1> All Products</h1>
+        <div className="border border-gray border-y-2 border-x-0 my-2">
+          <div>
+            {categories.map((category) => (
+              <Link
+                to={`product/${category.value}`}
+                key={category.value}
+                className="h-10 px-4 py-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-gray-light hover:font-semibold focus:outline-none active:bg-gray-light  disabled:pointer-events-none disabled:opacity-50 "
+              >
+                {category.label}
+              </Link>
+            ))}
+          </div>
         </div>
-        <div>
-          <Button>더보기</Button>
+        <div className="my-8 flex flex-wrap justify-around ">
+          <ProductLayout dataList={dataList}  />
         </div>
-      </div>
-      <div>
-        <ProductLayout dataList={dataList}/>
       </div>
     </>
   );
