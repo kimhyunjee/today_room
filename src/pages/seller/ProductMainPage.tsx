@@ -1,4 +1,4 @@
-import { auth } from "@/firebase";
+import { auth } from "@/lib/firebase/firebase.config";
 import ProductByCategory from "@/components/product/ProductByCategory";
 
 const ProductMainPage = () => {

@@ -29,7 +29,7 @@ import {
   uploadBytes,
   uploadBytesResumable,
 } from "firebase/storage";
-import { storage, db } from "@/firebase";
+import { storage, db } from "@/lib/firebase/firebase.config";
 import { collection, addDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
