@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { collection, getDocs, query } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db } from "../../lib/firebase/firebase.config";
 
 interface ProductType {
   id: string;
@@ -14,32 +14,31 @@ interface ProductType {
 const Products = () => {
   const [product, setProduct] = useState<ProductType[]>([]);
 
-    const fetchData = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "users"));
-        querySnapshot.forEach((doc) => {
-          console.log(`${doc.id} => ${doc.data()}`);
-        });
+  const fetchData = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "users"));
+      querySnapshot.forEach((doc) => {
+        console.log(`${doc.id} => ${doc.data()}`);
+      });
 
-        // const q = query(collection(db, "product"));
-        // const querySnapshot = await getDocs(q);
+      // const q = query(collection(db, "product"));
+      // const querySnapshot = await getDocs(q);
 
-        // const initialProduct: ProductType[] = [];
+      // const initialProduct: ProductType[] = [];
 
-        // querySnapshot.forEach((doc) => {
-        //   // console.log(doc, "id", doc.id, "data", doc.data());
-        //   initialProduct.push({ id: doc.id, ...doc.data() } as ProductType);
-        //   <div>{doc.id}</div>;
-        // });
+      // querySnapshot.forEach((doc) => {
+      //   // console.log(doc, "id", doc.id, "data", doc.data());
+      //   initialProduct.push({ id: doc.id, ...doc.data() } as ProductType);
+      //   <div>{doc.id}</div>;
+      // });
 
-        // setProduct(initialProduct);
-      } catch (error) {
-        console.log("error", error);
-      }
-    };
+      // setProduct(initialProduct);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
-    fetchData();
-
+  fetchData();
 
   return;
   {
