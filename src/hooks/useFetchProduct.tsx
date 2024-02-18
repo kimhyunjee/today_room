@@ -7,8 +7,6 @@ import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEY } from "@/constant/queryKey";
 
 const useFetchProduct = () => {
-  const [dataList, setDataList] = useState<Product[]>([]);
-
   const fetchData = async () => {
     try {
       const q = collection(db, "product");
@@ -20,20 +18,25 @@ const useFetchProduct = () => {
           id: doc.id,
         } as Product;
       });
-      console.log(data);
-      setDataList(data);
 
       return data;
     } catch (error) {
       console.log("error", error);
     }
   };
-  const { isLoading, data, isError, error } = useQuery({
+  
+  const {
+    data: dataList,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: QUERY_KEY.PRODUCT.MAIN(),
     queryFn: fetchData,
   });
 
-  return { dataList, setDataList };
+  // dataList가 undefined나 null이어도 [] 반환 == dataList: Product[]
+  return { dataList: dataList ?? [] };
 };
 
 export default useFetchProduct;

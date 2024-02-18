@@ -1,6 +1,7 @@
 import Router from "./routes/Router";
 import Layout from "./components/layout/Layout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 // Create a client
 export const queryClient = new QueryClient();
@@ -12,6 +13,7 @@ const App = () => {
         <Layout>
           <Router />
         </Layout>
+        <ReactQueryDevtools />
       </QueryClientProvider>
     </>
   );
