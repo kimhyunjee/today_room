@@ -7,6 +7,7 @@ import SignUpPage from "../pages/logIn/SignUpPage";
 import AddProductPage from "../pages/seller/AddProductPage";
 import { onAuthStateChanged, getAuth, User } from "firebase/auth";
 import SellerDashboard from "@/components/product/SellerDashboard";
+import EditProductPage from "@/pages/seller/EditProductPage";
 
 const Router = () => {
   const [userState, setUserState] = useState<boolean>(false);
@@ -33,6 +34,7 @@ const Router = () => {
         <Route path="/signUp" element={<SignUpPage />} />
         <Route path="/addProduct" element={<AddProductPage />} />
         <Route path="/seller" element={<SellerDashboard />} />
+        <Route path="/editProduct" element={<EditProductPage />} />
       </Routes>
     </>
   );
