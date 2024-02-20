@@ -102,7 +102,6 @@ const AddProductPage = () => {
     );
     const files = await Promise.all(promises);
     console.log(files);
-    //'https://firebasestorage.googleapis.com/v0/b/today-…=media&token=7acc6b6d-c921-4256-8010-6140c6a8831f'
 
     try {
       const docRef = await addDoc(collection(db, "product"), {

@@ -1,5 +1,16 @@
 import useFetchProduct from "@/hooks/useFetchProduct";
 import { Button } from "../ui/button";
+import { Link } from "react-router-dom";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebase.config";
@@ -31,9 +42,6 @@ const SellerDashboard = () => {
         context?.previousProduct
       );
     },
-    // onSuccess: () => {
-    //   queryClient.invalidateQueries({ queryKey: QUERY_KEY.PRODUCT.MAIN() });
-    // },
   });
 
   const productDelete = async (productId: string) => {
@@ -46,14 +54,43 @@ const SellerDashboard = () => {
 
   return (
     <>
-      {dataList.map((item) => {
-        return (
-          <div>
-            <p>{item.title}</p>
-            <Button onClick={() => handleClick(item.id)}>삭제</Button>
-          </div>
-        );
-      })}
+      <Table>
+        <TableCaption>최근 등록한 상품들입니다</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[100px]">이미지</TableHead>
+            <TableHead className="w-[100px]">상품명</TableHead>
+            <TableHead className="w-[100px]">카테고리</TableHead>
+            <TableHead className="w-[600px]">상품설명</TableHead>
+            <TableHead className="w-[100px]">가격</TableHead>
+            <TableHead></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {dataList.map((data) => (
+            <TableRow key={data.productId}>
+              <TableCell>
+                <img src={data.img} />
+              </TableCell>
+              <TableCell className="font-medium">{data.title}</TableCell>
+              <TableCell></TableCell>
+              <TableCell>{data.description}</TableCell>
+              <TableCell>{data.price}</TableCell>
+              <TableCell className="text-right">
+                <Button onClick={() => handleClick(data.id)}>삭제</Button>
+                <Link to={"/editProduct"} state={{ data: data }}>
+                  수정
+                </Link>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell></TableCell>
+          </TableRow>
+        </TableFooter>
+      </Table>
     </>
   );
 };
