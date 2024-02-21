@@ -19,27 +19,31 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
-import { Product } from "@/lib/firebase/types";
-import { useForm } from "react-hook-form";
-import { useNavigate, Location, useLocation } from "react-router-dom";
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
-import { db, storage } from "@/lib/firebase/firebase.config";
 import { useState } from "react";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
 import useFetchProduct from "@/hooks/useFetchProduct";
 
-interface Props {
-  dataList: Product[];
-}
+import { doc, updateDoc } from "firebase/firestore";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytes,
+  deleteObject,
+} from "firebase/storage";
+import { Product } from "@/lib/firebase/types";
+import { db, storage } from "@/lib/firebase/firebase.config";
 
-const EditProductPage = (data: Props) => {
-  const [previewImageFiles, setPreviewImageFiles] = useState<string[]>([]);
-  const [uploadImageFiles, setUploadImageFiles] = useState<FileList>();
+const EditProductPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const state = location.state as Props;
-  console.log(state.data.img);
+  const { id } = useParams() as { id: string };
+  const { product } = useFetchProduct(id) as { product: Product };
+
+  const [previewImageFiles, setPreviewImageFiles] = useState<string[]>(
+    product?.img || []
+  );
+  const [uploadImageFiles, setUploadImageFiles] = useState<FileList>();
 
   const FormSchema = z.object({
     // img: z.string().min(1).optional(),
@@ -81,15 +85,13 @@ const EditProductPage = (data: Props) => {
   const uploadFile = async (file: File) => {
     //파일을 업로드하려는 firebase storage에 대한 참조생성 / 폴더명은 product
     const storageRef = ref(storage, `product/${file.name}`);
-    console.log(file);
     // ref로 만든 참조와 해당 파일을 매개변수로 하여 파일을 업로드
     await uploadBytes(storageRef, file);
     const downloadURL = await getDownloadURL(storageRef);
     return downloadURL;
   };
 
-  const editHandler = async (data: z.infer<typeof FormSchema>) => {
-    console.log(data.title);
+  const editHandler = async (newData: z.infer<typeof FormSchema>) => {
     const promises = Array.from(uploadImageFiles as FileList).map((file) =>
       uploadFile(file)
     );
@@ -97,14 +99,14 @@ const EditProductPage = (data: Props) => {
     console.log(files);
 
     try {
-      const docRef = doc(db, "product");
+      const docRef = doc(db, "product", product.id);
       await updateDoc(docRef, {
-        title: data.title,
-        description: data.description,
+        title: newData.title,
+        description: newData.description,
         img: files,
-        price: data.price,
+        price: newData.price,
       });
-      console.log("Document written with ID: ", docRef.id);
+      // await storageDelete(files);
       navigate("/seller");
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -149,7 +151,11 @@ const EditProductPage = (data: Props) => {
                       상품명을 입력해주세요
                     </FormLabel>
                     <FormControl>
-                      <Input id="productName" {...field} />
+                      <Input
+                        id="productName"
+                        {...field}
+                        placeholder={product?.title}
+                      />
                     </FormControl>
                   </FormItem>
                 )}
@@ -164,7 +170,7 @@ const EditProductPage = (data: Props) => {
                       상품 설명을 입력해주세요
                     </FormLabel>
                     <FormControl>
-                      <Textarea {...field} />
+                      <Textarea {...field} placeholder={product?.description} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -186,7 +192,7 @@ const EditProductPage = (data: Props) => {
               ></FormField>
 
               <Button type="submit" className="border m-4">
-                상품 등록
+                수정 완료
               </Button>
             </form>
           </Form>

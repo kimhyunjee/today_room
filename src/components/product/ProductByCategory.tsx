@@ -1,6 +1,6 @@
 import { Button } from "../ui/button";
 import ProductLayout from "./ProductLayout";
-import useFetchProduct from "@/hooks/useFetchProduct";
+import useFetchProducts from "@/hooks/useFetchProducts";
 import { Link } from "react-router-dom";
 
 const categories = [
@@ -12,7 +12,7 @@ const categories = [
 ];
 
 const ProductByCategory = () => {
-  const { dataList } = useFetchProduct();
+  const { dataList } = useFetchProducts();
   return (
     <>
       <div className="m-8">
@@ -31,7 +31,7 @@ const ProductByCategory = () => {
           </div>
         </div>
         <div className="my-8 flex flex-wrap justify-around ">
-          <ProductLayout dataList={dataList}  />
+          <ProductLayout dataList={dataList} />
         </div>
       </div>
     </>

@@ -1,42 +1,37 @@
-import { useState } from "react";
-
-import { collection, getDocs } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebase.config";
-import { Product } from "@/lib/firebase/types";
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEY } from "@/constant/queryKey";
+import { Product } from "@/lib/firebase/types";
 
-const useFetchProduct = () => {
+const useFetchProduct = (productId: string) => {
   const fetchData = async () => {
     try {
-      const q = collection(db, "product");
-      const querySnapshot = await getDocs(q);
+      const productRef = doc(db, "product", productId);
+      const docSnap = await getDoc(productRef);
 
-      const data = querySnapshot.docs.map((doc) => {
-        return {
-          ...doc.data(),
-          id: doc.id,
-        } as Product;
-      });
+      if (docSnap.exists()) {
+        const { id } = docSnap;
+        const data = docSnap.data() as Product;
 
-      return data;
+        return { ...data, id };
+      }
     } catch (error) {
       console.log("error", error);
     }
   };
-  
+
   const {
-    data: dataList,
+    data: product,
     isLoading,
     isError,
     error,
   } = useQuery({
-    queryKey: QUERY_KEY.PRODUCT.MAIN(),
+    queryKey: QUERY_KEY.PRODUCT.DETAIL(productId),
     queryFn: fetchData,
   });
 
-  // dataList가 undefined나 null이어도 [] 반환 == dataList: Product[]
-  return { dataList: dataList ?? [] };
+  return { product };
 };
 
 export default useFetchProduct;

@@ -1,4 +1,4 @@
-import useFetchProduct from "@/hooks/useFetchProduct";
+import useFetchProducts from "@/hooks/useFetchProducts";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
 import {
@@ -20,7 +20,7 @@ import { queryClient } from "@/App";
 import { Product } from "@/lib/firebase/types";
 
 const SellerDashboard = () => {
-  const { dataList } = useFetchProduct();
+  const { dataList } = useFetchProducts();
   const { mutate } = useMutation({
     mutationFn: ({ productId }: { productId: string }) =>
       productDelete(productId),
@@ -78,9 +78,7 @@ const SellerDashboard = () => {
               <TableCell>{data.price}</TableCell>
               <TableCell className="text-right">
                 <Button onClick={() => handleClick(data.id)}>삭제</Button>
-                <Link to={"/editProduct"} state={{ data: data }}>
-                  수정
-                </Link>
+                <Link to={`/editProduct/${data.id}`}>수정</Link>
               </TableCell>
             </TableRow>
           ))}
