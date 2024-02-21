@@ -91,12 +91,43 @@ const EditProductPage = () => {
     return downloadURL;
   };
 
+  const storageDelete = async (file: File) => {
+    const storageRef = ref(storage, `product/${file.name}`);
+
+    const downloadURL = await getDownloadURL(storageRef);
+
+    let productRef;
+
+    const match = downloadURL.match(/product([^\/]+)\.png/);
+
+    if (match) {
+      const productName = match[1];
+      console.log(productName);
+      const decodeName = decodeURIComponent(`${productName}`);
+      console.log(decodeName);
+
+      productRef = ref(storage, `product/${decodeName}`);
+    }
+
+    if (productRef) {
+      deleteObject(productRef)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
+  // const url =
+  //   "https://firebasestorage.googleapis.com/v0/b/today-room.appspot.com/o/product%2F%EC%B4%88%EC%BD%94%EB%83%A5PC.png?alt=media&token=277f754a-4272-4291-8f07-146a8edc7652";
+
   const editHandler = async (newData: z.infer<typeof FormSchema>) => {
     const promises = Array.from(uploadImageFiles as FileList).map((file) =>
       uploadFile(file)
     );
     const files = await Promise.all(promises);
-    console.log(files);
 
     try {
       const docRef = doc(db, "product", product.id);
@@ -106,7 +137,7 @@ const EditProductPage = () => {
         img: files,
         price: newData.price,
       });
-      // await storageDelete(files);
+      await storageDelete(files);
       navigate("/seller");
     } catch (e) {
       console.error("Error adding document: ", e);
