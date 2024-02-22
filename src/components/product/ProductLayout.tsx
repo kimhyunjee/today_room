@@ -28,18 +28,13 @@ import {
 import { FaCartPlus } from "react-icons/fa6";
 
 import { Product } from "@/lib/firebase/types";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface Props {
   dataList: Product[];
 }
 
 const ProductLayout = ({ dataList }: Props) => {
-  const navigate = useNavigate();
-  const onClickCart = () => {
-    navigate("/cart/:id");
-  };
-
   return (
     <>
       {dataList?.map((item: Product) => (
@@ -72,6 +67,7 @@ const ProductLayout = ({ dataList }: Props) => {
             <CardDescription>{(item as Product).description}</CardDescription>
             <CardDescription> {(item as Product).price}원</CardDescription>
           </CardContent>
+
           <CardFooter className="flex justify-between">
             <AlertDialog>
               <AlertDialogTrigger asChild>
@@ -90,8 +86,8 @@ const ProductLayout = ({ dataList }: Props) => {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>계속 쇼핑하기</AlertDialogCancel>
-                  <AlertDialogAction onClick={onClickCart}>
-                    장바구니 보러가기
+                  <AlertDialogAction>
+                    <Link to={`/cart/${item.id}`}> 장바구니 보러가기</Link>
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

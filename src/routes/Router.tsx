@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { Route, Routes, Navigate, Outlet } from "react-router-dom";
 
+import { onAuthStateChanged, getAuth, User } from "firebase/auth";
+
 import ProductMain from "../pages/seller/ProductMainPage";
 import LogInPage from "../pages/logIn/LogInPage";
 import SignUpPage from "../pages/logIn/SignUpPage";
 import AddProductPage from "../pages/seller/AddProductPage";
-import { onAuthStateChanged, getAuth, User } from "firebase/auth";
 import SellerDashboard from "@/components/product/SellerDashboard";
 import EditProductPage from "@/pages/seller/EditProductPage";
+import CartPage from "@/pages/cart/CartPage";
 
 const Router = () => {
   const [userState, setUserState] = useState<boolean>(false);
@@ -35,6 +37,7 @@ const Router = () => {
         <Route path="/addProduct" element={<AddProductPage />} />
         <Route path="/seller" element={<SellerDashboard />} />
         <Route path="/editProduct/:id" element={<EditProductPage />} />
+        <Route path="/cart/:id" element={<CartPage />} />
       </Routes>
     </>
   );
