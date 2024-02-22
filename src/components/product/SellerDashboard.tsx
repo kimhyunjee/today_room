@@ -55,7 +55,9 @@ const SellerDashboard = () => {
   return (
     <>
       <Table>
-        <TableCaption>최근 등록한 상품들입니다</TableCaption>
+        <TableCaption>
+          <Link to={`/addProduct`}>상품 등록</Link>
+        </TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">이미지</TableHead>
@@ -68,9 +70,14 @@ const SellerDashboard = () => {
         </TableHeader>
         <TableBody>
           {dataList.map((data) => (
-            <TableRow key={data.productId}>
+            <TableRow key={data.id}>
               <TableCell>
-                <img src={data.img} />
+                {/* {data.img.map((image, index) => (
+                  <img key={index} src={image} alt={`product-image-${index}`} />
+                ))} */}
+                {data.img.length > 0 && (
+                  <img src={data.img[0]} alt={`product-image-${data.img[0]}`} />
+                )}
               </TableCell>
               <TableCell className="font-medium">{data.title}</TableCell>
               <TableCell></TableCell>

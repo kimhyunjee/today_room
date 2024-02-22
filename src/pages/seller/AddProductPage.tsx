@@ -18,6 +18,13 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -32,9 +39,9 @@ import {
 import { storage, db } from "@/lib/firebase/firebase.config";
 import { collection, addDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { SelectGroup, SelectLabel } from "@radix-ui/react-select";
 
 const FormSchema = z.object({
-  // img: z.string().min(1).optional(),
   title: z.string().min(1, { message: "상품명을 입력해주세요" }).optional(),
   description: z
     .string()
@@ -45,14 +52,8 @@ const FormSchema = z.object({
     .min(1, { message: "상품 가격을 입력해주세요" })
     .or(z.number())
     .optional(),
+  category: z.string().min(1, { message: "" }),
 });
-
-interface Props {
-  data?: string[];
-  limit?: number;
-  handleFile: (val: File) => void;
-  handleImgSrcList?: (val: string[]) => void;
-}
 
 const AddProductPage = () => {
   const [previewImageFiles, setPreviewImageFiles] = useState<string[]>([]);
@@ -81,22 +82,19 @@ const AddProductPage = () => {
     );
     setPreviewImageFiles(previewImages);
     setUploadImageFiles(file);
-    // e.target.value = "";
   };
 
   const uploadFile = async (file: File) => {
     //파일을 업로드하려는 firebase storage에 대한 참조생성 / 폴더명은 product
     const storageRef = ref(storage, `product/${file.name}`);
-    console.log(file);
     // ref로 만든 참조와 해당 파일을 매개변수로 하여 파일을 업로드
     await uploadBytes(storageRef, file);
     const downloadURL = await getDownloadURL(storageRef);
     return downloadURL;
   };
-  console.log(uploadImageFiles); //FileList {name: "",...}
+  // console.log(uploadImageFiles); //FileList {name: "",...}
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    console.log(data.title);
     const promises = Array.from(uploadImageFiles as FileList).map((file) =>
       uploadFile(file)
     );
@@ -109,6 +107,7 @@ const AddProductPage = () => {
         description: data.description,
         img: files,
         price: data.price,
+        category: data.category,
       });
       console.log("Document written with ID: ", docRef.id);
       navigate("/");
@@ -117,86 +116,120 @@ const AddProductPage = () => {
     }
   };
 
-  const fileRef = useRef<HTMLInputElement>(null);
-
   return (
     <>
-      <Carousel className="w-full max-w-xs">
-        <CarouselContent>
-          {previewImageFiles.map((src, index) => (
-            <CarouselItem key={index}>
-              <div className="p-1">
-                <Card>
-                  <CardContent className="flex aspect-square items-center justify-center p-6">
-                    <img src={src} />
-                  </CardContent>
-                </Card>
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
-      </Carousel>
+      <Card className="w-1/3 h-100 my-8 flex flex-col items-center">
+        <Carousel className="w-full max-w-xs">
+          <CarouselContent>
+            {previewImageFiles.map((src, index) => (
+              <CarouselItem key={index}>
+                <div className="p-1">
+                  <Card>
+                    <CardContent className="flex aspect-square items-center justify-center p-6">
+                      <img src={src} />
+                    </CardContent>
+                  </Card>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
 
-      <Input
-        id="picture"
-        type="file"
-        multiple
-        // {...field}
-        onChange={onChangeImg}
-        // ref={fileRef}
-      />
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="productName">
-                  상품명을 입력해주세요
-                </FormLabel>
-                <FormControl>
-                  <Input id="productName" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          ></FormField>
+        <div className="py-4">
+          <Label htmlFor="picture" className="py-2 border rounded-md p-2">
+            상품 이미지를 선택해주세요
+          </Label>
+          <Input
+            id="picture"
+            type="file"
+            multiple
+            onChange={onChangeImg}
+            className="hidden"
+          />
+        </div>
 
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="description">
-                  상품 설명을 입력해주세요
-                </FormLabel>
-                <FormControl>
-                  <Textarea {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          ></FormField>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="productName">
+                    상품명을 입력해주세요
+                  </FormLabel>
+                  <FormControl>
+                    <Input id="productName" {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="price"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel htmlFor="price">상품 가격을 입력해주세요</FormLabel>
-                <FormControl>
-                  <Input id="price" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          ></FormField>
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>카테고리</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="w-full my-2">
+                      <SelectValue placeholder="카테고리를 선택해주세요" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="bed">bed</SelectItem>
+                        <SelectItem value="table">table</SelectItem>
+                        <SelectItem value="sofa">sofa</SelectItem>
+                        <SelectItem value="chair">chair</SelectItem>
+                        <SelectItem value="closet">closet</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
 
-          <Button type="submit" className="border m-4">
-            상품 등록
-          </Button>
-        </form>
-      </Form>
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="description">
+                    상품 설명을 입력해주세요
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="price">
+                    상품 가격을 입력해주세요
+                  </FormLabel>
+                  <FormControl>
+                    <Input id="price" {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <Button type="submit" className="border my-4">
+              상품 등록
+            </Button>
+          </form>
+        </Form>
+      </Card>
     </>
   );
 };

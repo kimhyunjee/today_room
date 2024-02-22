@@ -14,16 +14,32 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { FaCartPlus } from "react-icons/fa6";
 
 import { Product } from "@/lib/firebase/types";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface Props {
   dataList: Product[];
 }
 
 const ProductLayout = ({ dataList }: Props) => {
+  const navigate = useNavigate();
+  const onClickCart = () => {
+    navigate("/cart/:id");
+  };
+
   return (
     <>
       {dataList?.map((item: Product) => (
@@ -57,9 +73,29 @@ const ProductLayout = ({ dataList }: Props) => {
             <CardDescription> {(item as Product).price}원</CardDescription>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <Button variant="outline">
-              <FaCartPlus />
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline">
+                  <FaCartPlus />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    상품이 장바구니에 담겼습니다
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    장바구니로 이동하시겠습니까?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>계속 쇼핑하기</AlertDialogCancel>
+                  <AlertDialogAction onClick={onClickCart}>
+                    장바구니 보러가기
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
             <Link
               to={`product/`}
               className="h-10 px-4 py-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50
