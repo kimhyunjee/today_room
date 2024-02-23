@@ -10,6 +10,7 @@ import AddProductPage from "../pages/seller/AddProductPage";
 import SellerDashboard from "@/components/product/SellerDashboard";
 import EditProductPage from "@/pages/seller/EditProductPage";
 import CartPage from "@/pages/cart/CartPage";
+import ProductByCategoryPage from "@/pages/product/ProductByCategoryPage";
 
 const Router = () => {
   const [userState, setUserState] = useState<boolean>(false);
@@ -38,6 +39,7 @@ const Router = () => {
         <Route path="/seller" element={<SellerDashboard />} />
         <Route path="/editProduct/:id" element={<EditProductPage />} />
         <Route path="/cart/:id" element={<CartPage />} />
+        <Route path="/product/:id" element={<ProductByCategoryPage />} />
       </Routes>
     </>
   );
