@@ -21,7 +21,7 @@ const useFetchProductByCategory = (category: string) => {
     const productByCategory = query(
       collection(db, "product"),
       where("category", "==", category),
-      limit(4),
+      limit(8),
       ...(pageParam ? [startAfter(pageParam)] : []) // 추가 코드
       // 처음 pageParam이 undefined임-> productByCategory undefined면 [] / next기능과 같음
     );
@@ -29,7 +29,6 @@ const useFetchProductByCategory = (category: string) => {
 
     const lastVisible =
       documentSnapshots.docs[documentSnapshots.docs.length - 1];
-    console.log("last", lastVisible);
 
     const data = documentSnapshots.docs.map((doc) => {
       return {
@@ -60,6 +59,10 @@ const useFetchProductByCategory = (category: string) => {
       if (data.length >= 4) return lastVisible;
       return undefined;
     },
+    select: ({ pages, pageParams }) => ({
+      pages: pages.flatMap((page) => page.data),
+      pageParams: pageParams,
+    }),
     // getPreviousPageParam: (firstPage, allPages) => firstPage.prevCursor,
   });
   return { data, hasNextPage, fetchNextPage };
