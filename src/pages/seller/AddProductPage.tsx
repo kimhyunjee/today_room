@@ -92,7 +92,6 @@ const AddProductPage = () => {
     const downloadURL = await getDownloadURL(storageRef);
     return downloadURL;
   };
-  // console.log(uploadImageFiles); //FileList {name: "",...}
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     const promises = Array.from(uploadImageFiles as FileList).map((file) =>
@@ -110,7 +109,7 @@ const AddProductPage = () => {
         category: data.category,
       });
       console.log("Document written with ID: ", docRef.id);
-      navigate("/");
+      navigate(`/product/${data.category}`);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
