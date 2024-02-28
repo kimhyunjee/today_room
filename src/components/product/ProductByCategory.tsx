@@ -13,6 +13,9 @@ const categories = [
 
 const ProductByCategory = () => {
   const { dataList } = useFetchProducts();
+
+  console.log(categories);
+
   return (
     <>
       <div className="m-8">
@@ -21,7 +24,7 @@ const ProductByCategory = () => {
           <div>
             {categories.map((category) => (
               <Link
-                to={`product/${category.value}`}
+                to={`/product/${category.value}`}
                 key={category.value}
                 className="h-10 px-4 py-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-gray-light hover:font-semibold focus:outline-none active:bg-gray-light  disabled:pointer-events-none disabled:opacity-50 "
               >

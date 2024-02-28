@@ -1,5 +1,5 @@
 import { auth } from "@/lib/firebase/firebase.config";
-import ProductByCategory from "@/components/product/ProductByCategory";
+import ProductByCategoryPage from "../product/ProductByCategoryPage";
 
 const ProductMainPage = () => {
   const user = auth.currentUser;
@@ -8,7 +8,7 @@ const ProductMainPage = () => {
 
   return (
     <>
-      <ProductByCategory />
+      <ProductByCategoryPage />
     </>
   );
 };
