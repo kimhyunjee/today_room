@@ -23,6 +23,7 @@ import {
 
 import useFetchProduct from "@/hooks/useFetchProduct";
 import { Button } from "../ui/button";
+import { useState } from "react";
 
 interface Props {
   productId: string;
@@ -30,13 +31,17 @@ interface Props {
 
 const ProductDetail = ({ productId }: Props) => {
   const { product } = useFetchProduct(productId);
+  const [count, setCount] = useState<number>(1);
 
   if (!product) {
     return <p>Loading...</p>;
   }
 
   const { title, description, img, price, category } = product || {};
-  console.log(img);
+
+  const onChangeCount = (value: string) => {
+    setCount(Number(value));
+  };
 
   return (
     <>
@@ -71,18 +76,23 @@ const ProductDetail = ({ productId }: Props) => {
           <div>
             <p className="text-2xl mt-4">{title}</p>
             <div className="flex justify-between items-center mt-2">
-              <Select>
+              <Select
+                defaultValue="1"
+                value={String(count)}
+                onValueChange={onChangeCount}
+              >
                 <SelectTrigger className="w-4/12">
-                  <SelectValue placeholder="0" />개
+                  <SelectValue>{count}</SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1">1</SelectItem>
-                  <SelectItem value="2">2</SelectItem>
-                  <SelectItem value="3">3</SelectItem>
-                  <SelectItem value="4">4</SelectItem>
+                  {Array.from({ length: 10 }, (_, i) => String(i + 1)).map(
+                    (selectValue) => (
+                      <SelectItem value={selectValue}>{selectValue}</SelectItem>
+                    )
+                  )}
                 </SelectContent>
               </Select>
-              <p className="text-xl"> {price} 원</p>
+              <p className="text-xl"> {count * price}원</p>
             </div>
           </div>
 
