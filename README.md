@@ -1,18 +1,15 @@
 
-# Today-Room
+# Today Room
 
 React + TypeScript + Vite 가구 구매 사이트
 </br>
 
-## get start ✨
+## 시작하기 ( Get Start ) ✨
 
 For building and running the application you need:
 
-
  - [Node.js 20.11.0](https://nodejs.org/en)
  - [npm 10.3.0](https://nodejs.org/en)
-
-## Run Locally
 
 Clone the project
 
@@ -39,7 +36,7 @@ Start the server
 ```
 </br>
 
-## 2. Technologies Used
+## 2. 사용 기술 ( Technologies Used )
 <div>
   <img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=white"/>
   <img src="https://img.shields.io/badge/Typescript-3178C6?style=flat-square&logo=Typescript&logoColor=white"/>
@@ -60,5 +57,21 @@ Start the server
 </div>
 -->
 </br>
+
+## 3. 아키텍처 ( Architecture )
+</br>
+
+## 4. 주요 기능 ( Features )
+</br>
+
+
+
+
+
+
+
+
+
+
 
 
