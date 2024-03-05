@@ -30,11 +30,22 @@ import { FaCartPlus } from "react-icons/fa6";
 import { Product } from "@/lib/firebase/types";
 import { Link } from "react-router-dom";
 
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { storage, db } from "@/lib/firebase/firebase.config";
+import { collection, addDoc } from "firebase/firestore";
+
 interface Props {
   dataList: Product[];
 }
 
-const ProductLayout = ({ dataList }: Props) => {
+const ProductCard = ({ dataList }: Props) => {
+  const uploadFile = async (file: File) => {
+    const storageRef = ref(storage, `cart/${file.name}`);
+    await uploadBytes(storageRef, file);
+    const downloadURL = await getDownloadURL(storageRef);
+    return downloadURL;
+  };
+
   return (
     <>
       {dataList?.map((item: Product) => (
@@ -106,4 +117,4 @@ const ProductLayout = ({ dataList }: Props) => {
   );
 };
 
-export default ProductLayout;
+export default ProductCard;

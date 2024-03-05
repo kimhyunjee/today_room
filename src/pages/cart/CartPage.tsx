@@ -13,12 +13,17 @@ import {
 } from "@/components/ui/carousel";
 
 import useFetchProduct from "@/hooks/useFetchProduct";
+import { auth } from "@/lib/firebase/firebase.config";
 import { Product } from "@/lib/firebase/types";
 import { useParams } from "react-router-dom";
 
 const CartPage = () => {
   const { id } = useParams() as { id: string };
   const { product } = useFetchProduct(id);
+
+  const user = auth.currentUser;
+  const userId = user?.uid;
+  console.log(user, userId);
 
   return (
     <>

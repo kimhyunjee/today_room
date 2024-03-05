@@ -20,10 +20,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "../ui/button";
 
 import useFetchProduct from "@/hooks/useFetchProduct";
-import { Button } from "../ui/button";
 import { useState } from "react";
+
+import {
+  ref,
+  getDownloadURL,
+  uploadBytes,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { storage, db } from "@/lib/firebase/firebase.config";
+import { collection, addDoc } from "firebase/firestore";
+import { Link } from "react-router-dom";
 
 interface Props {
   productId: string;
@@ -42,6 +63,25 @@ const ProductDetail = ({ productId }: Props) => {
   const onChangeCount = (value: string) => {
     setCount(Number(value));
   };
+
+  // const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+  //   const files = await Promise.all(promises);
+  //   try {
+  //     const docRef = await addDoc(collection(db, "product"), {
+  //       title: data.title,
+  //       description: data.description,
+  //       img: files,
+  //       price: data.price,
+  //       category: data.category,
+  //       totalPrice: data.totalPrice,
+  //       count: data.count,
+  //     });
+  //     console.log("Document written with ID: ", docRef.id);
+  //     navigate(`/cart/${data.category}`);
+  //   } catch (e) {
+  //     console.error("Error adding document: ", e);
+  //   }
+  // };
 
   return (
     <>
@@ -97,9 +137,30 @@ const ProductDetail = ({ productId }: Props) => {
           </div>
 
           <div className="flex justify-between">
-            <Button variant="outline" className="w-full">
-              장바구니
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" className="w-full">
+                  장바구니
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    상품이 장바구니에 담겼습니다
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    장바구니로 이동하시겠습니까?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>계속 쇼핑하기</AlertDialogCancel>
+                  <AlertDialogAction>
+                    <Link to={`/cart`}> 장바구니 보러가기</Link>
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+
             <Button variant="outline" className="w-full">
               바로구매
             </Button>

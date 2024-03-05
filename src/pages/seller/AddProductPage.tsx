@@ -98,7 +98,6 @@ const AddProductPage = () => {
       uploadFile(file)
     );
     const files = await Promise.all(promises);
-    console.log(files);
 
     try {
       const docRef = await addDoc(collection(db, "product"), {

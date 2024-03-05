@@ -1,5 +1,5 @@
 import { Button } from "../ui/button";
-import ProductLayout from "./ProductLayout";
+import ProductLayout from "./ProductCard";
 import useFetchProducts from "@/hooks/useFetchProducts";
 import { Link } from "react-router-dom";
 
