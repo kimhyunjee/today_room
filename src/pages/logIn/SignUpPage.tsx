@@ -1,8 +1,9 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import LogIn from "@/components/auth/LogInForm";
+import { auth } from "@/lib/firebase/firebase.config";
 
-const LogInPage = () => {
+const SignUpPage = () => {
   return (
     <>
       <LogIn />
@@ -10,4 +11,4 @@ const LogInPage = () => {
   );
 };
 
-export default LogInPage;
+export default SignUpPage;

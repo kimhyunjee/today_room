@@ -1,24 +1,20 @@
-import { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
-import { auth } from "./firebase";
+import Router from "./routes/Router";
+import Layout from "./components/layout/Layout";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-import Header from "./components/header/Header";
-import Footer from "./components/footer/Footer";
-import Main from "./components/main/Main";
-import LogInPage from "./pages/logIn/LogInPage";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+// Create a client
+export const queryClient = new QueryClient();
 
 const App = () => {
-  useEffect(() => {
-    createUserWithEmailAndPassword(auth, "test1@gmail.com", "12341234%");
-  }, []);
-
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Main />} />
-        <Route path="/logIn" element={<LogInPage />} />
-      </Routes>
+      <QueryClientProvider client={queryClient}>
+        <Layout>
+          <Router />
+        </Layout>
+        <ReactQueryDevtools />
+      </QueryClientProvider>
     </>
   );
 };
