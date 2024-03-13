@@ -53,7 +53,15 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { storage, db } from "@/lib/firebase/firebase.config";
-import { collection, addDoc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  doc,
+  getDoc,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import { Link } from "react-router-dom";
 
 interface Props {
@@ -104,11 +112,25 @@ const ProductDetail = ({ productId }: Props) => {
   // 상품정보 + 선택된 갯수, 총 금액 정보 전달/ cart컬렉션
   const handleClick = async (count: Number) => {
     try {
-        const docRef = await addDoc(collection(db, "cart"), {
+      const q = query(collection(db, "cart"), where("id", "==", productId));
+      const querySnap = await getDocs(q);
+
+      let productAlreadyExists = false;
+      querySnap.docs.map((doc) => {
+        console.log(doc.data().id == productId);
+        if (doc.data().id == productId) {
+          console.log("이미 장바구니에 상품이 있음");
+          productAlreadyExists = true;
+        }
+      });
+
+      if (!productAlreadyExists) {
+        const docRef = addDoc(collection(db, "cart"), {
           ...product,
           total: totalPrice,
           count: count,
         });
+      }
     } catch (error) {
       console.error(error);
     }
