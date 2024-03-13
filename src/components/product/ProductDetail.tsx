@@ -1,3 +1,5 @@
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Card,
   CardContent,
@@ -32,8 +34,16 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "../ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
 
 import useFetchProduct from "@/hooks/useFetchProduct";
+import { useForm } from "react-hook-form";
 import { useState } from "react";
 
 import {
@@ -50,7 +60,31 @@ interface Props {
   productId: string;
 }
 
+const FormSchema = z.object({
+  title: z.string().min(1, { message: "상품명을 입력해주세요" }).optional(),
+  description: z
+    .string()
+    .min(1, { message: "상품 설명을 입력해주세요" })
+    .optional(),
+  price: z
+    .string()
+    .min(1, { message: "상품 가격을 입력해주세요" })
+    .or(z.number())
+    .optional(),
+  category: z.string().min(1, { message: "" }),
+});
+
 const ProductDetail = ({ productId }: Props) => {
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      // img: "",
+      title: "",
+      description: "",
+      price: "",
+    },
+  });
+
   const { product } = useFetchProduct(productId);
   const [count, setCount] = useState<number>(1);
 
@@ -64,24 +98,21 @@ const ProductDetail = ({ productId }: Props) => {
     setCount(Number(value));
   };
 
-  // const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-  //   const files = await Promise.all(promises);
-  //   try {
-  //     const docRef = await addDoc(collection(db, "product"), {
-  //       title: data.title,
-  //       description: data.description,
-  //       img: files,
-  //       price: data.price,
-  //       category: data.category,
-  //       totalPrice: data.totalPrice,
-  //       count: data.count,
-  //     });
-  //     console.log("Document written with ID: ", docRef.id);
-  //     navigate(`/cart/${data.category}`);
-  //   } catch (e) {
-  //     console.error("Error adding document: ", e);
-  //   }
-  // };
+  const totalPrice = count ? Number(count) * Number(product?.price) : 0;
+
+  // 장바구니 버튼을 누르면
+  // 상품정보 + 선택된 갯수, 총 금액 정보 전달/ cart컬렉션
+  const handleClick = async (count: Number) => {
+    try {
+        const docRef = await addDoc(collection(db, "cart"), {
+          ...product,
+          total: totalPrice,
+          count: count,
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -132,6 +163,7 @@ const ProductDetail = ({ productId }: Props) => {
                   )}
                 </SelectContent>
               </Select>
+
               <p className="text-xl"> {count * price}원</p>
             </div>
           </div>
@@ -139,7 +171,11 @@ const ProductDetail = ({ productId }: Props) => {
           <div className="flex justify-between">
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="outline" className="w-full">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => handleClick(count)}
+                >
                   장바구니
                 </Button>
               </AlertDialogTrigger>
