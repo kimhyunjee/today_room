@@ -33,13 +33,13 @@ const Router = () => {
   return (
     <>
       <Routes>
-        <Route path="/"  element={userState ? <ProductMain /> : <LogInPage />} />
+        <Route path="/" element={userState ? <ProductMain /> : <LogInPage />} />
         <Route path="/logIn" element={<LogInPage />} />
         <Route path="/signUp" element={<SignUpPage />} />
         <Route path="/addProduct" element={<AddProductPage />} />
         <Route path="/seller" element={<SellerDashboard />} />
         <Route path="/editProduct/:id" element={<EditProductPage />} />
-        <Route path="/cart/:id" element={<CartPage />} />
+        <Route path="/cart" element={<CartPage />} />
         <Route path="/product/:id" element={<ProductByCategoryPage />} />
         <Route path="/product/detail/:id" element={<ProductDetailPage />} />
       </Routes>

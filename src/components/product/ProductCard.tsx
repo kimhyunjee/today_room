@@ -32,18 +32,16 @@ import { Link } from "react-router-dom";
 
 import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { storage, db } from "@/lib/firebase/firebase.config";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
+import useFetchProduct from "@/hooks/useFetchProduct";
 
 interface Props {
   dataList: Product[];
 }
 
 const ProductCard = ({ dataList }: Props) => {
-  const uploadFile = async (file: File) => {
-    const storageRef = ref(storage, `cart/${file.name}`);
-    await uploadBytes(storageRef, file);
-    const downloadURL = await getDownloadURL(storageRef);
-    return downloadURL;
+  const handleAddCart = (product: Product) => {
+    console.log(product);
   };
 
   return (
@@ -82,7 +80,7 @@ const ProductCard = ({ dataList }: Props) => {
           <CardFooter className="flex justify-between">
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="outline">
+                <Button variant="outline" onClick={() => handleAddCart(item)}>
                   <FaCartPlus />
                 </Button>
               </AlertDialogTrigger>
@@ -98,13 +96,13 @@ const ProductCard = ({ dataList }: Props) => {
                 <AlertDialogFooter>
                   <AlertDialogCancel>계속 쇼핑하기</AlertDialogCancel>
                   <AlertDialogAction>
-                    <Link to={`/cart/${item.id}`}> 장바구니 보러가기</Link>
+                    <Link to={`/cart/:id`}> 장바구니 보러가기</Link>
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
             <Link
-              to={`product/`}
+              to={`/product/:id`}
               className="h-10 px-4 py-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50
             border border-input bg-background hover:bg-accent hover:text-accent-foreground"
             >
