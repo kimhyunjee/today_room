@@ -213,7 +213,7 @@ const ProductDetail = ({ productId }: Props) => {
                 <AlertDialogFooter>
                   <AlertDialogCancel>계속 쇼핑하기</AlertDialogCancel>
                   <AlertDialogAction>
-                    <Link to={`/cart`}> 장바구니 보러가기</Link>
+                    <Link to={`/cart/:id`}> 장바구니 보러가기</Link>
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

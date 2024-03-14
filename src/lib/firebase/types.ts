@@ -12,3 +12,8 @@ export interface Product {
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
+
+export interface CartProduct extends Product {
+  count: number;
+  total: number;
+}
