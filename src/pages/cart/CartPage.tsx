@@ -31,7 +31,7 @@ import useFetchProduct from "@/hooks/useFetchProduct";
 import { auth } from "@/lib/firebase/firebase.config";
 import { Product } from "@/lib/firebase/types";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useFetchCartList from "@/hooks/useFetchCartList";
 
 const ProductCount = [
@@ -64,10 +64,23 @@ const CartPage = () => {
 
   const user = auth.currentUser;
   const userId = user?.uid;
-  console.log(user, userId);
+  console.log("현재 로그인한 유저 :", userId);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
+
+  const [totalPaymentAmount, setTotalPaymentAmount] = useState(0);
+
+  useEffect(() => {
+    const totalPayment = () => {
+      const totalCartAmount = cartList.reduce(
+        (total, product) => total + product.total,
+        0
+      );
+      setTotalPaymentAmount(totalCartAmount);
+    };
+    totalPayment();
+  }, [cartList]);
 
   return (
     <>
@@ -149,11 +162,12 @@ const CartPage = () => {
           </CardContent>
 
           {/* 총 합계 금액 */}
-          <CardContent>총 합계 금액 : {product.total}원</CardContent>
+          <CardContent> {product.total}원</CardContent>
         </Card>
       ))}
-
-
+      <div>
+        <p>결제 금액 {totalPaymentAmount}원 </p>
+      </div>
     </>
   );
 };
