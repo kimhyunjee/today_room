@@ -61,6 +61,7 @@ import {
   query,
   where,
   getDocs,
+  updateDoc,
 } from "firebase/firestore";
 import { Link } from "react-router-dom";
 
@@ -125,11 +126,13 @@ const ProductDetail = ({ productId }: Props) => {
       });
 
       if (!productAlreadyExists) {
-        const docRef = addDoc(collection(db, "cart"), {
+        const docRef = await addDoc(collection(db, "cart"), {
           ...product,
           total: totalPrice,
           count: count,
         });
+        const cartProductRef = doc(db,"cart",docRef.id)
+        await updateDoc(cartProductRef,{uid:docRef.id})
       }
     } catch (error) {
       console.error(error);
