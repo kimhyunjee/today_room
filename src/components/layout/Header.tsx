@@ -12,18 +12,22 @@ const Header = () => {
           <div className="w-16">
             <img src={Logo} alt="logo" />
           </div>
+          <Link to={`/`}>
+            <p className="text-2xl cursor-pointer">Today Room</p>
+          </Link>
 
-          <p>Today Room</p>
           <nav className="navigation">
             <ul className="flex list-none ml-7">
-              <li className="mx-5">
-                <FaSearch />
+              <li className="mx-5 ">
+                <FaSearch className="cursor-pointer" />
               </li>
               <li>
-                <FaCartPlus />
+                <Link to={`/cart`}>
+                  <FaCartPlus className="cursor-pointer" />
+                </Link>
               </li>
               <li className="mx-5">
-                <FaUser />
+                <FaUser className="cursor-pointer" />
               </li>
             </ul>
           </nav>

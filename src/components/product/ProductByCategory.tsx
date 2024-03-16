@@ -1,5 +1,5 @@
 import { Button } from "../ui/button";
-import ProductLayout from "./ProductCard";
+import ProductCard from "./ProductCard";
 import useFetchProducts from "@/hooks/useFetchProducts";
 import { Link } from "react-router-dom";
 
@@ -14,18 +14,17 @@ const categories = [
 const ProductByCategory = () => {
   const { dataList } = useFetchProducts();
 
-  console.log(categories);
+  console.log(dataList);
 
   return (
     <>
       <div className="m-8">
-        <h1> All Products</h1>
+        <h1>Products</h1>
         <div className="border border-gray border-y-2 border-x-0 my-2">
           <div>
             {categories.map((category) => (
               <Link
                 to={`/product/${category.value}`}
- 
                 key={category.value}
                 className="h-10 px-4 py-2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-gray-light hover:font-semibold focus:outline-none active:bg-gray-light  disabled:pointer-events-none disabled:opacity-50 "
               >
@@ -35,7 +34,7 @@ const ProductByCategory = () => {
           </div>
         </div>
         <div className="my-8 flex flex-wrap justify-around ">
-          <ProductLayout dataList={dataList} />
+          <ProductCard dataList={dataList} />
         </div>
       </div>
     </>

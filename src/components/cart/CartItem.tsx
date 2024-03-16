@@ -63,13 +63,17 @@ const CartItem = ({ product }: CartItemProps) => {
   const [productValue, setProductValue] = useState(product.count);
   const [openPopover, setOpenPopover] = useState(false);
 
+  const [productTotalAmount, setProductTotalAmount] = useState(product.total);
+
   const handleSelect = async (value: number) => {
     setProductValue(value);
     const ref = doc(db, "cart", product.uid);
     await updateDoc(ref, {
       count: value,
+      total: value * product.price,
     });
     setOpenPopover(false);
+    setProductTotalAmount(value * product.price);
   };
 
   return (
@@ -154,7 +158,7 @@ const CartItem = ({ product }: CartItemProps) => {
         </CardContent>
 
         {/* 총 합계 금액 */}
-        <CardContent> {product.total}원</CardContent>
+        <CardContent> {productTotalAmount}원</CardContent>
       </Card>
     </>
   );
