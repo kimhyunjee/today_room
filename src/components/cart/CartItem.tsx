@@ -26,6 +26,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Checkbox } from "@/components/ui/checkbox";
 
 import { useState } from "react";
 import { CartProduct } from "@/lib/firebase/types";
@@ -57,13 +58,15 @@ const ProductCount = [
 
 interface CartItemProps {
   product: CartProduct;
+  // onCheckboxChange: (isChecked: boolean, price: number) => void;
 }
-
+//, onCheckboxChange
 const CartItem = ({ product }: CartItemProps) => {
   const [productValue, setProductValue] = useState(product.count);
   const [openPopover, setOpenPopover] = useState(false);
 
   const [productTotalAmount, setProductTotalAmount] = useState(product.total);
+  const [isChecked, setIsChecked] = useState(false);
 
   const handleSelect = async (value: number) => {
     setProductValue(value);
@@ -74,6 +77,11 @@ const CartItem = ({ product }: CartItemProps) => {
     });
     setOpenPopover(false);
     setProductTotalAmount(value * product.price);
+  };
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // setIsChecked(event.target.checked);
+    // onCheckboxChange(event.target.checked, product.price);
   };
 
   return (
@@ -156,6 +164,14 @@ const CartItem = ({ product }: CartItemProps) => {
             </PopoverContent>
           </Popover>
         </CardContent>
+
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id={product.uid}
+            // checked={isChecked}
+            onCheckedChange={() => handleCheckboxChange}
+          />
+        </div>
 
         {/* 총 합계 금액 */}
         <CardContent> {productTotalAmount}원</CardContent>
