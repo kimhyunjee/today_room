@@ -28,7 +28,13 @@ import {
 } from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { useState } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { CartProduct } from "@/lib/firebase/types";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebase.config";
@@ -58,15 +64,25 @@ const ProductCount = [
 
 interface CartItemProps {
   product: CartProduct;
-  // onCheckboxChange: (isChecked: boolean, price: number) => void;
+  checkedList: {
+    id: string;
+    amount: number;
+  }[];
+  setCheckedList: React.Dispatch<
+    React.SetStateAction<
+      {
+        id: string;
+        amount: number;
+      }[]
+    >
+  >;
 }
-//, onCheckboxChange
-const CartItem = ({ product }: CartItemProps) => {
+
+const CartItem = ({ product, checkedList, setCheckedList }: CartItemProps) => {
   const [productValue, setProductValue] = useState(product.count);
   const [openPopover, setOpenPopover] = useState(false);
-
   const [productTotalAmount, setProductTotalAmount] = useState(product.total);
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState<boolean>(true);
 
   const handleSelect = async (value: number) => {
     setProductValue(value);
@@ -76,12 +92,37 @@ const CartItem = ({ product }: CartItemProps) => {
       total: value * product.price,
     });
     setOpenPopover(false);
-    setProductTotalAmount(value * product.price);
+    setProductTotalAmount((prev) => value * product.price);
+
+    if (checkedList.some((item) => item.id === product.uid)) {
+      setCheckedList(
+        checkedList.map((item) =>
+          item.id === product.uid
+            ? { ...item, amount: value * product.price }
+            : item
+        )
+      );
+    }
   };
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // setIsChecked(event.target.checked);
-    // onCheckboxChange(event.target.checked, product.price);
+  // useEffect(() => {
+  //   updateCheckedList(isChecked);
+  // }, []);
+
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setIsChecked((prev) => !prev);
+    updateCheckedList(event.target.checked);
+  };
+
+  const updateCheckedList = (checked: boolean) => {
+    if (checked) {
+      setCheckedList([
+        ...checkedList,
+        { id: product.uid, amount: productTotalAmount },
+      ]);
+    } else {
+      setCheckedList(checkedList.filter(({ id }) => product.uid !== id));
+    }
   };
 
   return (
@@ -166,10 +207,11 @@ const CartItem = ({ product }: CartItemProps) => {
         </CardContent>
 
         <div className="flex items-center space-x-2">
-          <Checkbox
+          <input
+            type="checkbox"
             id={product.uid}
-            // checked={isChecked}
-            onCheckedChange={() => handleCheckboxChange}
+            checked={isChecked}
+            onChange={handleCheckboxChange}
           />
         </div>
 

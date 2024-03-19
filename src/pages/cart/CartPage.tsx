@@ -4,34 +4,13 @@ import CartItem from "@/components/cart/CartItem";
 
 const CartPage = () => {
   const { cartList } = useFetchCartList();
-  const [cartItemAmountList, setCartItemAmountList] = useState<number[]>([]);
-  const [totalPaymentAmount, setTotalPaymentAmount] = useState<number>(0);
+  const [checkedList, setCheckedList] = useState<
+    {
+      id: string;
+      amount: number;
+    }[]
+  >([]);
 
-  useEffect(() => {
-    const calculateTotal = () => {
-      const cartItemAmountArray = cartList.map((cart) => cart.total).flat();
-      const totalAmount = cartItemAmountArray.reduce(
-        (acc, cur) => acc + cur,
-        0
-      );
-
-      if (totalPaymentAmount !== totalAmount) {
-        setTotalPaymentAmount(totalAmount);
-      }
-    };
-
-    calculateTotal();
-  }, [cartList]);
-
-  // const handleCheckboxChange = (isChecked: boolean, price: number) => {
-  //   if (isChecked) {
-  //     setTotalPaymentAmount((current) => current + price);
-  //   } else {
-  //     setTotalPaymentAmount((current) => current - price);
-  //   }
-  // };
-
-  //{totalPaymentAmount.reduce((acc, num) => acc + num, 0)}원
 
   return (
     <>
@@ -39,11 +18,15 @@ const CartPage = () => {
         <CartItem
           key={index}
           product={product}
-          // onCheckboxChange={handleCheckboxChange}
+          checkedList={checkedList}
+          setCheckedList={setCheckedList}
         ></CartItem>
       ))}
       <div>
-        <p>총 결제 금액 {totalPaymentAmount}원 </p>
+        <p>
+          총 결제 금액
+          {checkedList.reduce((total, item) => total + item.amount, 0)}원
+        </p>
         <button>주문하러 가기</button>
       </div>
     </>
