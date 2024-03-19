@@ -3,7 +3,7 @@ import { Route, Routes, Navigate, Outlet } from "react-router-dom";
 
 import { onAuthStateChanged, getAuth, User } from "firebase/auth";
 
-import ProductMain from "../pages/seller/ProductMainPage";
+import ProductMain from "../pages/product/ProductMainPage";
 import LogInPage from "../pages/logIn/LogInPage";
 import SignUpPage from "../pages/logIn/SignUpPage";
 import AddProductPage from "../pages/seller/AddProductPage";

@@ -61,6 +61,7 @@ import {
   query,
   where,
   getDocs,
+  updateDoc,
 } from "firebase/firestore";
 import { Link } from "react-router-dom";
 
@@ -110,7 +111,7 @@ const ProductDetail = ({ productId }: Props) => {
 
   // 장바구니 버튼을 누르면
   // 상품정보 + 선택된 갯수, 총 금액 정보 전달/ cart컬렉션
-  const handleClick = async (count: Number) => {
+  const handleAddCart = async (count: Number) => {
     try {
       const q = query(collection(db, "cart"), where("id", "==", productId));
       const querySnap = await getDocs(q);
@@ -125,11 +126,13 @@ const ProductDetail = ({ productId }: Props) => {
       });
 
       if (!productAlreadyExists) {
-        const docRef = addDoc(collection(db, "cart"), {
+        const docRef = await addDoc(collection(db, "cart"), {
           ...product,
           total: totalPrice,
           count: count,
         });
+        const cartProductRef = doc(db,"cart",docRef.id)
+        await updateDoc(cartProductRef,{uid:docRef.id})
       }
     } catch (error) {
       console.error(error);
@@ -196,7 +199,7 @@ const ProductDetail = ({ productId }: Props) => {
                 <Button
                   variant="outline"
                   className="w-full"
-                  onClick={() => handleClick(count)}
+                  onClick={() => handleAddCart(count)}
                 >
                   장바구니
                 </Button>

@@ -16,4 +16,5 @@ export interface Product {
 export interface CartProduct extends Product {
   count: number;
   total: number;
+  uid:string;
 }

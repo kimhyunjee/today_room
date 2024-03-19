@@ -1,7 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { logInFormSchema, type LogInFormSchema } from "@/lib/zod/logInSchema";
 import { auth } from "@/lib/firebase/firebase.config";
+import { useForm } from "react-hook-form";
+
 import {
   signInWithEmailAndPassword,
   signOut,
@@ -20,28 +21,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-
-const FormSchema = z.object({
-  email: z
-    .string()
-    .min(2, {
-      message: "이메일을 입력해주세요",
-    })
-    .email({ message: "이메일 형식이 아닙니다" }),
-  password: z
-    .string()
-    .min(8, { message: "비밀번호를 입력해주세요" })
-    .regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,15}$/, {
-      message: "8자 이상의 영문자, 숫자, 특수문자가 필요합니다",
-    }),
-});
 
 const LogInForm = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const to = location.pathname;
   const [isLogIn, setIsLogIn] = useState<boolean>(false);
 
   useEffect(() => {
@@ -55,23 +39,21 @@ const LogInForm = () => {
     return unsubscribe;
   }, []);
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<LogInFormSchema>({
+    resolver: zodResolver(logInFormSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  const onSubmitLogIn = async (data: z.infer<typeof FormSchema>) => {
-    console.log(data);
+  const onSubmitLogIn = async (data: LogInFormSchema) => {
     try {
       const userLogIn = await signInWithEmailAndPassword(
         auth,
         data.email,
         data.password
       );
-      console.log(userLogIn);
       localStorage.setItem("user", JSON.stringify(userLogIn));
     } catch (error) {
       console.log(error);

@@ -34,6 +34,9 @@ import { Product } from "@/lib/firebase/types";
 
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
+import { db } from "@/lib/firebase/firebase.config";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import useFetchProduct from "@/hooks/useFetchProduct";
 
 const ProductByCategoryPage = () => {
   const { id } = useParams() as { id: string };
@@ -50,6 +53,21 @@ const ProductByCategoryPage = () => {
       fetchNextPage();
     }
   }, [inView]);
+
+  // const handleAddCart = async (id: string) => {
+  //   try {
+  //     console.log(product?.pages, id);
+  //     // const docRef = addDoc(collection(db,"cart"),{
+  //     //   ...product,
+  //     //   total:data.price,
+  //     // count:1,
+  //     // })
+  //     // const cartProductRef = doc(db,"cart",id);
+  //     // await updateDoc(cartProductRef, {uid:id})
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const categories = [
     { label: "Bed", value: "bed" },
@@ -111,9 +129,12 @@ const ProductByCategoryPage = () => {
               <CardFooter className="flex justify-between">
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="outline">
+                    {/* <Button
+                      variant="outline"
+                      onClick={() => handleAddCart(data.id)}
+                    >
                       <FaCartPlus />
-                    </Button>
+                    </Button> */}
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
