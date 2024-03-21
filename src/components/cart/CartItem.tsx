@@ -26,17 +26,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Checkbox } from "@/components/ui/checkbox";
+import { IoClose } from "react-icons/io5";
 
-import {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import { ChangeEvent, useState } from "react";
 import { CartProduct } from "@/lib/firebase/types";
-import { doc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { Firestore } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebase.config";
 
 const ProductCount = [
@@ -76,13 +71,19 @@ interface CartItemProps {
       }[]
     >
   >;
+  cartList: CartProduct[];
 }
 
-const CartItem = ({ product, checkedList, setCheckedList }: CartItemProps) => {
+const CartItem = ({
+  product,
+  checkedList,
+  setCheckedList,
+  cartList,
+}: CartItemProps) => {
   const [productValue, setProductValue] = useState(product.count);
   const [openPopover, setOpenPopover] = useState(false);
   const [productTotalAmount, setProductTotalAmount] = useState(product.total);
-  const [isChecked, setIsChecked] = useState<boolean>(true);
+  const [isChecked, setIsChecked] = useState<boolean>(false);
 
   const handleSelect = async (value: number) => {
     setProductValue(value);
@@ -105,15 +106,12 @@ const CartItem = ({ product, checkedList, setCheckedList }: CartItemProps) => {
     }
   };
 
-  // useEffect(() => {
-  //   updateCheckedList(isChecked);
-  // }, []);
-
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     setIsChecked((prev) => !prev);
     updateCheckedList(event.target.checked);
   };
 
+  // 장바구니 체크여부에 따른 화면
   const updateCheckedList = (checked: boolean) => {
     if (checked) {
       setCheckedList([
@@ -123,6 +121,12 @@ const CartItem = ({ product, checkedList, setCheckedList }: CartItemProps) => {
     } else {
       setCheckedList(checkedList.filter(({ id }) => product.uid !== id));
     }
+  };
+
+  // 장바구니 상품 삭제
+  const handleDeleteProduct = async (productId: string) => {
+    await deleteDoc(doc(db, "cart", product.uid));
+    
   };
 
   return (
@@ -217,6 +221,10 @@ const CartItem = ({ product, checkedList, setCheckedList }: CartItemProps) => {
 
         {/* 총 합계 금액 */}
         <CardContent> {productTotalAmount}원</CardContent>
+        <IoClose
+          onClick={() => handleDeleteProduct(product.uid)}
+          className="cursor-pointer"
+        />
       </Card>
     </>
   );

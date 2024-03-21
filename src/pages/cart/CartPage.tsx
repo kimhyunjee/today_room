@@ -20,6 +20,7 @@ const CartPage = () => {
           product={product}
           checkedList={checkedList}
           setCheckedList={setCheckedList}
+          cartList={cartList}
         ></CartItem>
       ))}
       <div>
